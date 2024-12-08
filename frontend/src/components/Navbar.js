@@ -4,38 +4,33 @@ import { CiHome, CiSettings, CiLogin, CiLogout } from "react-icons/ci";
 import { IoGridOutline, IoCreateOutline } from "react-icons/io5";
 import { AuthContext } from "../context/AuthContext";
 
-// Reusable IconButton component for Hamburger and Close icons
-const IconButton = ({ onClick, isClose }) => {
-  const iconClasses = "w-[18px] h-[18px] relative block w-full h-[2px] bg-blackScale-darker";
-  return (
-    <button
-      className="fixed top-[24px] right-[24px] p-2 z-50"
-      onClick={onClick}
-      aria-label={isClose ? "Close Menu" : "Open Menu"}
-    >
-      <div className="w-[18px] h-[18px] relative">
-        {isClose ? (
-          <>
-            <span className={`${iconClasses} rotate-45 absolute top-[8px]`} />
-            <span className={`${iconClasses} -rotate-45 absolute top-[8px]`} />
-          </>
-        ) : (
-          <>
-            <span className={`${iconClasses} mb-[3px]`} />
-            <span className={`${iconClasses} mb-[3px]`} />
-            <span className={iconClasses} />
-          </>
-        )}
-      </div>
-    </button>
-  );
-};
+const IconButton = ({ onClick, isClose }) => (
+  <button
+    className="nav-icon-button"
+    onClick={onClick}
+    aria-label={isClose ? "Close Menu" : "Open Menu"}
+  >
+    <div className="nav-icon-lines">
+      {isClose ? (
+        <>
+          <span className="nav-icon-line nav-icon-line-close rotate-45"></span>
+          <span className="nav-icon-line nav-icon-line-close -rotate-45"></span>
+        </>
+      ) : (
+        <>
+          <span className="nav-icon-line"></span>
+          <span className="nav-icon-line"></span>
+          <span className="nav-icon-line"></span>
+        </>
+      )}
+    </div>
+  </button>
+);
 
-// Reusable NavItem for links and buttons
 const NavItem = ({ to, icon: Icon, label, isButton = false, onClick }) => {
   const sharedClasses =
-    "nav-item flex items-center px-4 py-2 rounded-md text-blackScale-mid transition hover:bg-white hover:text-pinkGradient-from hover:border-pinkGradient-from";
-  const IconComponent = <Icon className="nav-icon mr-4" size={20} />;
+    "nav-item flex items-center px-4 py-2 rounded-md text-black-mid transition hover:bg-white hover:text-pink-from hover:border-pink-from";
+  const IconComponent = <Icon className="nav-icon" size={20} />;
   const Label = <span>{label}</span>;
 
   if (isButton) {
@@ -71,35 +66,30 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div className="navbar-container">
       {/* Hamburger Icon */}
       {!menuOpen && <IconButton onClick={() => setMenuOpen(true)} />}
 
       {/* Navbar Drawer */}
       {menuOpen && (
         <div
-          className={`fixed top-0 right-0 h-screen bg-blackScale-light rounded-l-lg shadow-lg p-6 z-50 transition-all duration-300 ${
-            menuOpen ? "w-full md:w-[30%]" : "w-0"
-          }`}
-          style={{ backgroundColor: "#E5E5E5" }}
+          className={`nav-drawer nav-drawer-open`}
         >
           {/* Close Icon */}
           <IconButton onClick={() => setMenuOpen(false)} isClose />
 
           {/* Profile Section */}
-          <div className="flex items-center mb-8">
+          <div className="profile-section">
             <img
-              src="/profile-pic.png" // Replace with dynamic profile image source
+              src="/profile-pic.png"
               alt="Profile"
               className="profile-pic"
             />
-            <span className="ml-4 font-bold text-gray-800">
-              Hi! {user?.name || "Guest"}
-            </span>
+            <span className="profile-name">Hi! {user?.firstname || "Guest"}</span>
           </div>
 
           {/* Navigation Links */}
-          <ul className="space-y-4">
+          <ul className="nav-items">
             {[
               { to: "/dashboard", icon: CiHome, label: "Dashboard" },
               { to: "/create-trip", icon: IoCreateOutline, label: "Create Trip Report" },
