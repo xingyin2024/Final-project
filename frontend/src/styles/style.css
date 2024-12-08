@@ -1,0 +1,287 @@
+/* *************** Universal setting ****************** */
+/* Colors */
+:root {
+  --pink-from: #fa1214;
+  --pink-via: #fe3a82;
+  --pink-to: #d2006d;
+  --black-light: #e5e5e5;
+  --black-muted: #aaaaaa;
+  --black-mid: #808080;
+  --black-dark: #555555;
+  --black-darker: #2b2b2b;
+  --black-input: #b0adad;
+  --black-border: #e8e8e8;
+  --status-success: #1d9e33;
+  --status-processing: #eaa221;
+  --status-warning: #f42828;
+  --font-family-sans: "Inter", sans-serif;
+}
+
+/* Font Family */
+body {
+  font-family: var(--font-family-sans);
+}
+
+/* Buttons */
+.primary-btn {
+  width: 100%;
+  text-align: center;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(to bottom, var(--pink-from) 0%, var(--pink-via) 50%, var(--pink-to) 100%);
+  color: white;
+  padding: 10px;
+}
+
+.primary-btn:disabled {
+  background: linear-gradient(to bottom, var(--pink-from) 0%, var(--pink-via) 50%, var(--pink-to) 100%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.secondary-btn {
+  width: 100%;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid var(--pink-from);
+  background: white;
+  color: var(--pink-from);
+  padding: 10px; /* Adjust as needed */
+  text-decoration: none; /* Remove underline */
+}
+
+.secondary-btn:hover {
+  background: linear-gradient(
+    to bottom,
+    var(--pink-from) 0%,
+    var(--pink-via) 50%,
+    var(--pink-to) 100%
+  );
+  color: white;
+  border: none;
+}
+
+.text-btn {
+  background: linear-gradient(to bottom, var(--pink-from) 0%, var(--pink-via) 50%, var(--pink-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  border: none;
+}
+
+/* Input Fields */
+.textinput {
+  width: 100%;
+  text-align: left;  
+  font-size: 1rem; /* Default text size */
+  color: var(--black-mid); /* Input text color */
+  border-radius: 8px;
+  border: 1px solid var(--black-border);
+  padding: 10px 12px; /* Adjust padding for a balanced appearance */
+  background: white;
+}
+
+.textinput::placeholder {
+  font-size: 0.875rem; /* Equivalent to text-sm */
+  color: var(--black-input); /* Muted gray for placeholder text */
+  opacity: 1; /* Ensure placeholder is fully visible */
+}
+
+.textinput:focus {
+  border: 1px solid var(--pink-from);
+  background: white;
+  color: var(--pink-from);
+  outline: none;
+}
+
+/* Utility */
+.gradient-text {
+  background: linear-gradient(to bottom, var(--pink-from) 0%, var(--pink-via) 50%, var(--pink-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/***********************/
+/***********************/
+
+/* Welcome Page Styles */
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: white;
+  text-align: center;
+  position: relative; /* Ensure relative positioning for children like btn-footer */  
+}
+
+.welcome-title {
+  font-size: 2.5rem; /* Equivalent to text-4xl */
+  font-weight: bold;
+  background: linear-gradient(
+    to bottom,
+    var(--pink-from) 0%,
+    var(--pink-via) 50%,
+    var(--pink-to) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/***********************/
+
+/* Login Page Styles */
+.login-register-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: white;
+}
+
+/* Header Container */
+.login-register-header-container {
+  width: 100%;
+  max-width: 300px; /* Matches the input width */
+  margin-bottom: 24px; /* Space between header and inputs */
+}
+
+.login-register-header {
+  color: black;
+  font-family: "Inter", sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.login-register-text {
+  margin-top: 8px;
+  color: var(--black-dark);
+}
+
+.login-register-form {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 24px;
+}
+
+/* Position of btn on the bottom of the screen 
+same om welcome, login, register pages*/
+
+.btn-footer {
+  width: 100%; 
+  max-width: 300px; 
+  position: absolute; 
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex; /* Center the button within the footer */
+  justify-content: center;
+  
+  @media (min-width: 768px) {
+    position: relative; /* Button near inputs for larger screens */
+    margin-top: 32px; /* Place button closer to the inputs */
+    bottom: auto;
+    left: auto;
+    transform: none;  
+  }
+}
+
+/***********************/
+/***********************/
+
+/* Dashboard Styles */
+.dashboard-container {
+  padding: 24px;
+ 
+}
+
+.dashboard-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sum-card {
+  text-align: left;
+  padding: 8px;
+  background: white;
+  border: 1px solid var(--black-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover transition */
+}
+
+.sum-card:hover {
+  transform: translateY(-4px); /* Slight lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+  border-color: var(--pink-from); /* Change border color to pink gradient start */
+}
+
+.sum-card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.sum-card-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--black-mid);
+  line-height: 32px;
+}
+
+/* Recent Trips Header */
+.recent-trips-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.recent-trips-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* Trip Cards */
+.trip-card {
+  background: white;
+  border: 1px solid var(--black-border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover */
+  cursor: pointer;
+}
+
+.trip-card:hover {
+  transform: translateY(-4px); /* Lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+  border-color: var(--pink-from); /* Border matches hover color */
+}
+
+.trip-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.trip-card-location,
+.trip-card-amount,
+.trip-card-status {
+  font-size: 0.875rem;
+  color: var(--black-mid);
+  margin-bottom: 8px;
+}
+

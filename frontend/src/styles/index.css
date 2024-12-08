@@ -1,0 +1,128 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global reusable styles */
+/* Reusable Navbar Drawer Styles */
+.navbar-drawer {
+  @apply absolute top-0 left-0 w-[30%] h-screen bg-blackScale-light rounded-lg shadow-lg p-6 z-50;
+}
+
+/* Reusable Button and Link Hover Styles */
+.nav-item {
+  @apply flex items-center p-3 rounded-md text-blackScale-mid border border-transparent;
+}
+
+.nav-item:hover {
+  @apply bg-white text-pinkGradient-from border-pinkGradient-from;
+}
+
+/* Reusable Icon Styling */
+.nav-icon {
+  @apply mr-4 text-blackScale-mid;
+}
+
+/* Profile Picture Styling */
+.profile-pic {
+  @apply w-8 h-8 rounded-full border-2 border-white;
+}
+
+/* Hamburger Menu Icon */
+.hamburger-menu span {
+  @apply block w-full h-[2px] bg-black;
+}
+
+.hamburger-menu.open span:nth-child(1) {
+  @apply absolute rotate-45 top-[8px];
+}
+
+.hamburger-menu.open span:nth-child(2) {
+  @apply absolute -rotate-45 top-[8px];
+}
+
+.hamburger-menu.closed span {
+  @apply mb-[3px];
+}
+
+/* Primary Button Styles */
+.primary-btn {
+  @apply text-white font-semibold py-3 px-4 rounded-md;
+  @apply bg-gradient-to-b from-pinkGradient-from via-pinkGradient-via to-pinkGradient-to;
+  @apply hover:opacity-90 transition-all duration-300 ease-in-out;
+}
+
+/* Disabled State for Primary Button */
+.primary-btn:disabled {
+  @apply bg-gradient-to-b from-[#FAD2D6] to-[#FFE6EB] text-[#FFFFFFB3] cursor-not-allowed;
+}
+
+/* Secondary Button Styles */
+.secondary-btn {
+  @apply border border-pinkGradient-from text-pinkGradient-from bg-white font-semibold py-3 px-4 rounded-md;
+  @apply transition-all duration-300 ease-in-out; /* Ensure all properties transition smoothly */
+}
+
+.secondary-btn:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 18, 20, 0.8) 0%,
+    #FE3A82 48.63%,
+    rgba(210, 0, 109, 0.8) 100%
+  );
+  color: white;
+  border: none;
+  transition: background 0.3s ease-in-out, color 0.1s ease-in-out; /* Sync transitions */
+}
+
+
+/* Placeholder Styles */
+.input-placeholder::placeholder {
+  color: #B0ADAD; /* Default placeholder color */
+  transition: color 0.3s ease-in-out;
+}
+.input-placeholder:focus::placeholder {
+  color: transparent; /* Hides placeholder on focus */
+}
+
+/* Input Styles */
+.input-field {
+  @apply w-full border border-blackScale-border text-blackScale-input bg-white rounded-md p-3;
+  transition: border-color 0.3s ease-in-out;
+}
+.input-field:focus {
+  border-color: #FA1214; /* Pink gradient border on focus */
+  outline: none;
+}
+
+/* Gradient Text Button */
+.text-btn {
+  @apply font-medium text-transparent bg-clip-text bg-gradient-to-b from-pinkGradient-from via-pinkGradient-via to-pinkGradient-to;
+}
+
+/* Header Text Styles */
+.header-title {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+/* Form Button Styles */
+.form-btn {
+  @apply w-full mt-4 py-3 rounded-md text-white bg-gradient-to-b from-pinkGradient-from via-pinkGradient-via to-pinkGradient-to;
+  transition: opacity 0.3s ease-in-out;
+}
+.form-btn:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
