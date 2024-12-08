@@ -5,7 +5,7 @@ const Settings = () => {
   const { user, login } = useContext(AuthContext); // Mock login to update user details
   const [formData, setFormData] = useState({
     firstname: user?.firstname || "",
-    secondname: user?.secondname || "",    
+    secondname: user?.secondname || "",
     email: user?.email || "",
     phone: user?.phone || "",
   });
@@ -23,78 +23,86 @@ const Settings = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Settings</h1>
-      <div className="space-y-4">
-        <div>
-          <label className="block text-gray-600">Firstname</label>
+    <div className="settings-container">
+      {/* Header */}
+      <h1 className="settings-header">Hello, {user?.firstname || "Guest"}!</h1>
+
+      {/* Profile Section */}
+      <div className="profile-section">
+        <img
+          src="/profile-pic.png" // Replace with dynamic profile image source
+          alt="Profile"
+          className="profile-pic-main"
+        />
+      </div>
+
+      {/* User Details */}
+      <div className="settings-form">
+        <div className="form-row">
+          <label className="form-label">Firstname</label>
           <input
             type="text"
             name="firstname"
             value={formData.firstname}
             disabled={!isEditing}
             onChange={handleChange}
-            className={`border rounded-md w-full p-2 ${isEditing ? "border-gray-400" : "bg-gray-100"}`}
+            className={`textinput ${!isEditing ? "disabled-input" : ""}`}
           />
         </div>
-        <div>
-          <label className="block text-gray-600">Secondname</label>
+        <div className="form-row">
+          <label className="form-label">Secondname</label>
           <input
             type="text"
             name="secondname"
             value={formData.secondname}
             disabled={!isEditing}
             onChange={handleChange}
-            className={`border rounded-md w-full p-2 ${isEditing ? "border-gray-400" : "bg-gray-100"}`}
+            className={`textinput ${!isEditing ? "disabled-input" : ""}`}
           />
         </div>
-        <div>
-          <label className="block text-gray-600">Email</label>
+        <div className="form-row">
+          <label className="form-label">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             disabled={!isEditing}
             onChange={handleChange}
-            className={`border rounded-md w-full p-2 ${isEditing ? "border-gray-400" : "bg-gray-100"}`}
+            className={`textinput ${!isEditing ? "disabled-input" : ""}`}
           />
         </div>
-        <div>
-          <label className="block text-gray-600">Phone</label>
+        <div className="form-row">
+          <label className="form-label">Telephone</label>
           <input
             type="tel"
             name="phone"
             value={formData.phone}
             disabled={!isEditing}
             onChange={handleChange}
-            className={`border rounded-md w-full p-2 ${isEditing ? "border-gray-400" : "bg-gray-100"}`}
+            className={`textinput ${!isEditing ? "disabled-input" : ""}`}
           />
         </div>
-        <div className="mt-6">
-          {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-            >
+      </div>
+
+      {/* Buttons */}
+      <div className="btn-footer">
+        {isEditing ? (
+          <div className="sm-btn-footer">
+            <button onClick={handleSave} className="secondary-btn">
               Save
             </button>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-gray-800 text-white px-4 py-2 rounded-md"
-            >
-              Edit Profile
-            </button>
-          )}
-          {isEditing && (
             <button
               onClick={() => setIsEditing(false)}
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
+              className="secondary-btn"
             >
               Cancel
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <button onClick={() => setIsEditing(true)} className="primary-btn">
+            Update Profile
+          </button>
+        )}
       </div>
     </div>
   );
