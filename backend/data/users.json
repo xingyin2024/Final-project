@@ -1,6 +1,6 @@
 [
   {
-    "id": "1",
+    "userID": "1",
     "firstname": "John",
     "secondname":"Admin",
     "email": "admin@example.com",
@@ -9,7 +9,7 @@
     "phone": "123-456-7890"
   },
   {
-    "id": "2",
+    "userID": "2",
     "firstname": "Jane",
     "secondname":"Miles",
     "email": "jane@example.com",
@@ -18,7 +18,7 @@
     "phone": "987-654-3210"
   },
   {
-    "id": "3",
+    "userID": "3",
     "firstname": "Mike",
     "secondname":"Worker",
     "email": "mike@example.com",
