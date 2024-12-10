@@ -19,7 +19,7 @@ const authenticate = (req, res, next) => {
     return res.status(401).json({ message: "Authentication required" });
   }
 
-   // Check if the role is valid
+  // Validate role
   if (role !== 'admin' && role !== 'co-worker') {
     return res.status(403).json({ message: "Invalid role" });
   }
@@ -28,7 +28,7 @@ const authenticate = (req, res, next) => {
   next();
 };
 
-// Admin authorization middleware
+// Admin authorization middleware || A reusable middleware to check if the user is an admin. ex "/admin/secure-data"
 const authorizeAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied. Admin only." });
@@ -36,7 +36,15 @@ const authorizeAdmin = (req, res, next) => {
   next();
 };
 
-// Normalization function for status
+// Normalize value function
+const normalizeValue = (key, value) => {
+  if (key === "status") {
+    return handleNormalizeStatus(value);
+  }
+  return value.toLowerCase();
+};
+
+// Status normalization function
 const handleNormalizeStatus = (status) => {
   return status
     .trim()
@@ -53,11 +61,14 @@ const validStatusGroups = {
   "awaiting approval": ["awaiting approval"],
 };
 
+
+/***************** router start here ************* */
+
 // Default endpoint
 app.get("/", (req, res) => res.send("Welcome to the Traktamente API"));
 
-// User endpoint (admin only)
-app.get("/users", authenticate, authorizeAdmin, (req, res) => {
+// All User endpoint (admin only)
+app.get("/admin/users", authenticate, authorizeAdmin, (req, res) => {
   res.json(users);
 });
 
@@ -66,91 +77,65 @@ app.get("/admin/trips", authenticate, authorizeAdmin, (req, res) => {
   res.json(trips);
 });
 
-// Endpoint to get all trips for a specific user
-app.get("/users/:userID/trips", authenticate, (req, res) => {
-  const userID = req.params.userID;
-  
-  if (req.user.role !== "admin" && req.user.id !== userID) {
-    return res.status(403).json({ message: "Access denied. You can only view your own trips." });
+// Unified trips endpoint
+app.get("/trips", authenticate, (req, res) => {
+  const { userID: queryUserID, ...queryFilters } = req.query; // Separate userID from other filters
+  const { id: authenticatedUserID, role } = req.user; // Extract authenticated user details
+
+  // Initialize filtered trips
+  let filteredTrips = trips;
+
+  // Apply role-based filtering
+  if (role !== "admin") {
+    // Regular users can only access their own trips
+    if (queryUserID && queryUserID !== authenticatedUserID) {
+      return res.status(403).json({ message: "Access denied. You can only view your own trips." });
+    }
+    filteredTrips = filteredTrips.filter((trip) => trip.userID === authenticatedUserID);
+  } else if (queryUserID) {
+    // Admin can filter by userID if provided, tex "/trips?userID=123"
+    filteredTrips = filteredTrips.filter((trip) => trip.userID === queryUserID);
   }
 
-  const userTrips = trips.filter((trip) => trip.userID === userID);
+  // Apply dynamic query filters
+  for (const [key, value] of Object.entries(queryFilters)) {
+    if (key === "status") {
+      // Normalize and validate status
+      const normalizedStatus = normalizeValue(key, value);
+      const matchingStatuses = validStatusGroups[normalizedStatus];
 
-  if (userTrips.length > 0) {
-    res.json(userTrips);
-  } else {
-    res.status(404).json({ message: `No trips found for user "${userID}".` });
+      if (!matchingStatuses) {
+        return res.status(400).json({
+          message: `Invalid status: "${value}". Please use one of the following: "${Object.keys(validStatusGroups).join('", "')}"`,
+        });
+      }
+
+      filteredTrips = filteredTrips.filter((trip) =>
+        matchingStatuses.includes(trip.status.toLowerCase())
+      );
+    } else if (key === "createdBy") {
+      // Filter by createdBy
+      filteredTrips = filteredTrips.filter(
+        (trip) => trip.creation.createdBy.toLowerCase() === value.toLowerCase()
+      );
+    } else if (key === "approvedBy") {
+      // Filter by approvedBy
+      filteredTrips = filteredTrips.filter(
+        (trip) =>
+          trip.submission.approvedBy &&
+          trip.submission.approvedBy.toLowerCase() === value.toLowerCase()
+      );
+    } else {
+      // Handle invalid query parameters
+      return res.status(400).json({ message: `Invalid query parameter: "${key}"` });
+    }
   }
-});
-
-// Endpoint to get trips for a specific user filtered by status
-app.get("/users/:userID/trips/:status", authenticate, (req, res) => {
-  const { userID, status } = req.params;
-  
-  if (req.user.role !== "admin" && req.user.id !== userID) {
-    return res.status(403).json({ message: "Access denied. You can only view your own trips." });
-  }
-
-  const normalizedStatus = handleNormalizeStatus(status);
-  console.log(`Normalized status: ${normalizedStatus}`);
-
-  const matchingStatuses = validStatusGroups[normalizedStatus];
-  console.log(`Matching statuses:`, matchingStatuses); 
-
-  if (!matchingStatuses) {
-    return res.status(400).json({
-      message: `Invalid status: "${status}". Please use one of the following: "${Object.keys(validStatusGroups).join('", "')}"`,
-    });
-  }
-
-  const filteredTrips = trips.filter((trip) => 
-    trip.userID === userID && matchingStatuses.includes(trip.status.toLowerCase())
-  );
 
   if (filteredTrips.length > 0) {
     res.json(filteredTrips);
   } else {
-    res.status(404).json({ message: `No trips found for user "${userID}" with status "${status}"` });
-  }
-});
-
-// Admin endpoint to get all trips filtered by status
-app.get("/admin/trips/:status", authenticate, authorizeAdmin, (req, res) => {
-  const { status } = req.params;
-  const normalizedStatus = handleNormalizeStatus(status);
-  const matchingStatuses = validStatusGroups[normalizedStatus];
-
-  if (!matchingStatuses) {
-    return res.status(400).json({
-      message: `Invalid status: "${status}". Please use one of the following: "${Object.keys(validStatusGroups).join('", "')}"`,
-    });
-  }
-
-  const filteredTrips = trips.filter((trip) => matchingStatuses.includes(trip.status.toLowerCase()));
-
-  if (filteredTrips.length > 0) {
-    res.json(filteredTrips);
-  } else {
-    res.status(404).json({ message: `No trips found with status "${status}"` });
+    res.status(404).json({ message: "No trips found with the provided filters." });
   }
 });
 
 app.listen(port, () => console.log(`App listening on port ${port}! Yay!`));
-
-
-
-/* This updated server.js includes the following key features:
-
-  A simplified authentication middleware that checks for user ID and role in the request headers.
-
-  An admin authorization middleware to restrict certain endpoints to admin users only.
-
-  Separate endpoints for regular users and admins:
-    /users/:userID/trips for users to view all their trips
-    /users/:userID/trips/:status for users to filter their trips by status
-    /admin/trips for admins to view all trips
-    /admin/trips/:status for admins to filter all trips by status
-
-  Proper error handling and status code responses for various scenarios.
-
-  Reusable functions for status normalization and validation. */
